@@ -8,10 +8,10 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
 
 # MySQL Configuration
-app.config['MYSQL_HOST'] = 'flasapp-server.mysql.database.azure.com'
-app.config['MYSQL_USER'] = 'vhuqfqlnqk'
+app.config['MYSQL_HOST'] = 'itwarbazar-server.mysql.database.azure.com'
+app.config['MYSQL_USER'] = 'nopviaqsyt'
 app.config['MYSQL_PASSWORD'] = 'Malik786'
-app.config['MYSQL_DB'] = 'flaskauthapp-database'
+app.config['MYSQL_DB'] = 'itwarbazar-database'
 mysql = MySQL(app)
 
 # User registration form

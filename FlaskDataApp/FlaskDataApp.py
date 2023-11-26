@@ -33,7 +33,7 @@ class LoginForm(FlaskForm):
 # Routes
 @app.route('/')
 def home():
-    return 'Welcome to the Flask Azure App!'
+    return render_template('home.html')
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():

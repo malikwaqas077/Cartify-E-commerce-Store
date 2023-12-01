@@ -3,6 +3,15 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, validators
 import mysql.connector
 from flask_mysqldb import MySQL
+from wtforms import StringField, PasswordField, SubmitField, validators
+from wtforms.validators import ValidationError
+from flask import Flask
+from models import db
+from forms import ProductForm
+from dashboard import dashboard_bp
+    
+
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
@@ -14,15 +23,23 @@ app.config['MYSQL_PASSWORD'] = 'Malik786'
 app.config['MYSQL_DB'] = 'itwarbazar-database'
 mysql = MySQL(app)
 
+
+app.register_blueprint(dashboard_bp)  # Register the blueprint
+
 # User registration form
 class RegistrationForm(FlaskForm):
     username = StringField('Username', [validators.Length(min=4, max=25)])
     password = PasswordField('Password', [
         validators.DataRequired(),
+        validators.Length(min=6),
         validators.EqualTo('confirm', message='Passwords must match')
     ])
-    confirm = PasswordField('Repeat Password')
+    confirm = PasswordField('Repeat Password', [validators.DataRequired()])
     submit = SubmitField('Sign Up')
+
+    def validate_confirm(self, field):
+        if self.password.data != field.data:
+            raise ValidationError('Passwords must match')
 
 # User login form
 class LoginForm(FlaskForm):
@@ -57,6 +74,8 @@ def login():
         cursor.close()
         if user:
             flash('Login successful!', 'success')
+            return redirect(url_for('dashboard.dashboard'))  # Redirect to the dashboard
+
         else:
             flash('Login failed. Check your username and password.', 'danger')
     return render_template('login.html', form=form)

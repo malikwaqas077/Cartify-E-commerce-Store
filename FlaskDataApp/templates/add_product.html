@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        
+        /* Additional style for the alert box */
+        .alert-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            display: none;
+            text-align: center;
+        }
+
+        .close-button {
+            cursor: pointer;
+        }
+
+        form {
+            max-width: 400px;
+            width: 100%;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            text-align: left;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div id="alertContainer" class="alert-container">
+        <span id="closeButton" class="close-button" onclick="closeAlert()">&times;</span>
+        <p id="alertMessage">{{ success_message }}</p>
+    </div>
+    
+    <form method="POST" action="{{ url_for('dashboard.add_product') }}">
+        <h2>Add Product</h2>
+        {{ form.hidden_tag() }}
+
+        <label for="name">Product Name:</label>
+        {{ form.name() }}
+
+        <label for="description">Product Description:</label>
+        {{ form.description() }}
+
+        <label for="price">Product Price:</label>
+        {{ form.price() }}
+
+        <button type="submit">Add Product</button>
+    </form>
+
+    <script>
+        // Function to close the alert box
+        function closeAlert() {
+            document.getElementById('alertContainer').style.display = 'none';
+            // Redirect to dashboard after closing
+            window.location.href = "{{ url_for('dashboard.dashboard') }}";
+        }
+
+        // Display the alert box with the provided message
+        {% if success_message %}
+            var alertContainer = document.getElementById('alertContainer');
+            alertContainer.style.display = 'block';
+
+            // Automatically close after 3 seconds (adjust as needed)
+            setTimeout(function() {
+                closeAlert();
+            }, 3000);
+        {% endif %}
+    </script>
+</body>
+</html>

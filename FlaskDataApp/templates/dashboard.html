@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        nav {
+            background-color: #333;
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 15px;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .welcome {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .section {
+            background-color: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="#">Home</a>
+        <a href="{{ url_for('dashboard.add_product') }}">Add Product</a>
+        <a href="#">Orders</a>
+        <a href="#">Profile</a>
+        <a href="#">Logout</a>
+    </nav>
+
+    <div class="container">
+        <div class="welcome">
+            <p>Welcome, [Username]!</p>
+        </div>
+
+        <div class="section">
+            <h2>Recent Orders</h2>
+            <!-- Placeholder for recent orders -->
+            <p>No recent orders.</p>
+        </div>
+
+        <div class="section">
+            <h2>Product Inventory</h2>
+            <!-- Placeholder for product inventory -->
+            <p>Your product inventory is empty.</p>
+        </div>
+
+        <div class="section">
+            <h2>User Profile</h2>
+            <!-- Placeholder for user profile information -->
+            <p>Username: [Username]<br>Email: [Email]</p>
+        </div>
+    </div>
+</body>
+</html>
+

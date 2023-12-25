@@ -1,61 +1,91 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>User Dashboard</title>
-<style>
-  body { font-family: 'Arial', sans-serif; background: #f5f5f5; margin: 0; }
-  .header { background-color: #131921; color: white; padding: 10px 20px; text-align: left; }
-  .sidebar { background-color: #232f3e; color: white; width: 200px; position: fixed; height: 100%; padding: 20px; }
-  .sidebar a { color: white; text-decoration: none; padding: 10px 0; display: block; }
-  .sidebar a:hover { background-color: #485769; }
-  .main-content { margin-left: 200px; padding: 20px; }
-  .main-content h2 { color: #131921; }
-  .card { background: white; padding: 20px; margin-bottom: 20px; border-radius: 4px; }
-  .footer { background-color: #131921; color: white; text-align: center; padding: 10px 20px; position: fixed; bottom: 0; width: calc(100% - 200px); margin-left: 200px; }
-</style>
+    <title>Your E-Commerce Site</title>
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        /* Header Styles */
+        header {
+            background-color: #f8f8f8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+        }
+        .logo {
+            width: 100px; /* Adjust as needed */
+        }
+        .search-bar {
+            flex-grow: 1;
+            margin: 0 20px;
+        }
+        .search-bar input {
+            width: 100%;
+            padding: 10px;
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        /* Body Styles */
+        .product-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 20px;
+        }
+        .product {
+            flex-basis: calc(25% - 10px); /* Four products per row */
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        /* Responsive */
+        @media (max-width: 768px) {
+            .product {
+                flex-basis: calc(50% - 10px); /* Two products per row on smaller screens */
+            }
+        }
+    </style>
 </head>
 <body>
 
-<div class="header">
-  <h1>User Dashboard</h1>
-</div>
+<header>
+    <img src="{{ url_for('static', filename='shopping.png') }}" alt="Logo" class="logo">
+    <div class="search-bar">
+        <input type="text" placeholder="Search...">
+    </div>
+    <div class="nav-links">
+        <a href="#">Login/Signup</a>
+        <a href="#">Cart</a>
+    </div>
+</header>
 
-<div class="sidebar">
-  <a href="#">Dashboard</a>
-  <a href="#">Orders</a>
-  <a href="#">Wishlist</a>
-  <a href="#">Account Settings</a>
-</div>
+<div class="product-container">
+    {% for product in products %}
+        <!-- Debugging line: Print each product object -->
 
-<div class="main-content">
-  <h2>Welcome, [User's Name]!</h2>
-  
-  <div class="card">
-    <h3>Order History</h3>
-    <!-- Table or list of orders -->
-  </div>
-  
-  <div class="card">
-    <h3>Wishlist</h3>
-    <!-- Wishlist items -->
-  </div>
-  
-  <div class="card">
-    <h3>Account Settings</h3>
-    <!-- Account setting options -->
-  </div>
-  
-  <div class="card">
-    <h3>Recommendations</h3>
-    <!-- Recommended products -->
-  </div>
-</div>
+        <div class="product">
+            <img src="{{ url_for('static', filename='add-to-cart.png') }}" alt="Product Image" class="product-image">
+            <h3>Name: {{ product[0] }}</h3>
+            <p>Description: {{ product[1] }}</p>
+            <p>Price: ${{ product[1] }}</p>
+            <button>Add to Cart</button>
+        </div>
+    {% else %}
+        <p>No products found.</p>
+    {% endfor %}
+</div></div>
 
-<div class="footer">
-  <p>&copy; 2023 E-commerce Site</p>
+    <!-- Product End -->
+    <!-- You can replicate the above div for as many products as you have -->
 </div>
 
 </body>
 </html>
+x   

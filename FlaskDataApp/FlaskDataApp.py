@@ -81,6 +81,17 @@ def login():
             flash('Or register if you have not done so already.', 'danger')
     return render_template('login.html', form=form)
 
+@app.route('/user_dashboard')
+def view_dashboard():
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT * FROM products")
+    products = cursor.fetchall()
+    print(products)  # This retrieves all products from the database
+    cursor.close()
+    return render_template('user_dashboard.html', products=products)
+
+        
+    
 
 
 if __name__ == '__main__':

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Dashboard</title>
+<style>
+  body { font-family: 'Arial', sans-serif; background: #f5f5f5; margin: 0; }
+  .header { background-color: #131921; color: white; padding: 10px 20px; text-align: left; }
+  .sidebar { background-color: #232f3e; color: white; width: 200px; position: fixed; height: 100%; padding: 20px; }
+  .sidebar a { color: white; text-decoration: none; padding: 10px 0; display: block; }
+  .sidebar a:hover { background-color: #485769; }
+  .main-content { margin-left: 200px; padding: 20px; }
+  .main-content h2 { color: #131921; }
+  .card { background: white; padding: 20px; margin-bottom: 20px; border-radius: 4px; }
+  .footer { background-color: #131921; color: white; text-align: center; padding: 10px 20px; position: fixed; bottom: 0; width: calc(100% - 200px); margin-left: 200px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>User Dashboard</h1>
+</div>
+
+<div class="sidebar">
+  <a href="#">Dashboard</a>
+  <a href="#">Orders</a>
+  <a href="#">Wishlist</a>
+  <a href="#">Account Settings</a>
+</div>
+
+<div class="main-content">
+  <h2>Welcome, [User's Name]!</h2>
+  
+  <div class="card">
+    <h3>Order History</h3>
+    <!-- Table or list of orders -->
+  </div>
+  
+  <div class="card">
+    <h3>Wishlist</h3>
+    <!-- Wishlist items -->
+  </div>
+  
+  <div class="card">
+    <h3>Account Settings</h3>
+    <!-- Account setting options -->
+  </div>
+  
+  <div class="card">
+    <h3>Recommendations</h3>
+    <!-- Recommended products -->
+  </div>
+</div>
+
+<div class="footer">
+  <p>&copy; 2023 E-commerce Site</p>
+</div>
+
+</body>
+</html>

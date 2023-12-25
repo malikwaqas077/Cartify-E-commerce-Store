@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Product Page</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        .product-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            padding: 15px;
+        }
+
+        .product-name {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .product-description {
+            color: #555;
+        }
+
+        .product-price {
+            color: #007bff;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 class="my-4">Product Page</h1>
+
+    <div class="row">
+        {% for product in products %}
+            <div class="col-md-4">
+                <div class="product-card">
+                    <div class="product-name">{{ product[0] }}</div> <!-- Assuming name is the second column -->
+                    <div class="product-description">{{ product[1] }}</div> <!-- Assuming description is the third column -->
+                    <div class="product-price">${{ product[2] }}</div> <!-- Assuming price is the fourth column -->
+
+                    <a href="{{ url_for('dashboard.edit_product', product_id=product[3]) }}" class="btn btn-primary btn-sm">Edit</a>
+                    
+                    <!-- Delete Button -->
+                    <a href="{{ url_for('dashboard.delete_product', product_id=product[3]) }}" class="btn btn-danger btn-sm">Delete</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+</body>
+</html>

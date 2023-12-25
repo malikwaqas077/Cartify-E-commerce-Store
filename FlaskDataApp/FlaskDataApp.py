@@ -17,10 +17,10 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
 
 # MySQL Configuration
-app.config['MYSQL_HOST'] = 'itwarbazar-server.mysql.database.azure.com'
-app.config['MYSQL_USER'] = 'nopviaqsyt'
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = 'Malik786'
-app.config['MYSQL_DB'] = 'itwarbazar-database'
+app.config['MYSQL_DB'] = 'crud_app_db'
 mysql = MySQL(app)
 
 
@@ -78,7 +78,10 @@ def login():
 
         else:
             flash('Login failed. Check your username and password.', 'danger')
+            flash('Or register if you have not done so already.', 'danger')
     return render_template('login.html', form=form)
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

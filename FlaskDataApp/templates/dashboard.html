@@ -3,76 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f4f4f4;
+            display: flex;
+            height: 100vh;
         }
-
-        nav {
-            background-color: #333;
+        
+        .sidebar {
+            background-color: #555;
             color: #fff;
-            padding: 15px;
-            text-align: center;
+            width: 250px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            transition: width 0.3s;
+            height: 100%;
         }
 
-        nav a {
+        .sidebar a {
             color: #fff;
             text-decoration: none;
-            margin: 0 15px;
+            margin-bottom: 10px;
+            padding: 8px;
+            transition: background-color 0.3s;
         }
 
-        .container {
+        .sidebar a:hover {
+            background-color: #777;
+        }
+
+        .content {
+            flex-grow: 1;
             padding: 20px;
+            transition: margin-left 0.3s;
         }
 
-        .welcome {
-            font-size: 24px;
+        .submenu {
+            display: none;
+            padding-left: 20px;
+        }
+
+        .submenu a {
+            margin-bottom: 5px;
+        }
+
+        .user-profile {
+            text-align: center;
             margin-bottom: 20px;
+            background-color: #eee;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .user-profile img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .user-info {
+            color: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .section {
             background-color: #fff;
             padding: 20px;
             margin-bottom: 20px;
+            border-radius: 8px;
         }
     </style>
 </head>
 <body>
-    <nav>
-        <a href="#">Home</a>
-        <a href="{{ url_for('dashboard.add_product') }}">Add Product</a>
-        <a href="#">Orders</a>
-        <a href="#">Profile</a>
-        <a href="#">Logout</a>
-    </nav>
+    <div class="sidebar" id="sidebar">
+        <div class="user-profile">
+            <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="User Image">
+            <div class="user-info">
+                <span>Malik Waqas</span>
+                <span>07379475692</span>
+            </div>
+        </div>
+        
+        <a href="#" onclick="displayContent('ViewProducts')">Product</a>
 
-    <div class="container">
-        <div class="welcome">
+        <div class="submenu" id="Products">
+            <a href="{{ url_for('dashboard.add_product') }}">Add Product</a>
+            <a href="{{ url_for('dashboard.view_products') }}">View Products</a>
+        </div>
+
+        <a href="#" onclick="displayContent('RecentOrders')">Recent Orders</a>
+        <a href="#" onclick="displayContent('UserProfile')">User Profile</a>
+    </div>
+
+    <div class="content">
+        <div class="welcome" id="Welcome">
             <p>Welcome, [Username]!</p>
         </div>
 
-        <div class="section">
+        <div class="section" id="RecentOrders" style="display: none;">
             <h2>Recent Orders</h2>
             <!-- Placeholder for recent orders -->
             <p>No recent orders.</p>
         </div>
 
-        <div class="section">
+        <div class="section" id="ProductInventory" style="display: none;">
             <h2>Product Inventory</h2>
             <!-- Placeholder for product inventory -->
             <p>Your product inventory is empty.</p>
         </div>
 
-        <div class="section">
+        <div class="section" id="UserProfile" style="display: none;">
             <h2>User Profile</h2>
             <!-- Placeholder for user profile information -->
             <p>Username: [Username]<br>Email: [Email]</p>
         </div>
     </div>
+
+    <script>
+        function displayContent(contentId) {
+            var contentSections = document.querySelectorAll('.section');
+            contentSections.forEach(function(section) {
+                section.style.display = 'none';
+            });
+
+            var selectedContent = document.getElementById(contentId);
+            selectedContent.style.display = 'block';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var submenus = document.querySelectorAll('.submenu');
+
+            submenus.forEach(function(submenu) {
+                submenu.previousElementSibling.addEventListener('click', function() {
+                    submenu.style.display = submenu.style.display === 'none' ? 'block' : 'none';
+                });
+            });
+        });
+    </script>
 </body>
 </html>
-

@@ -4,6 +4,13 @@ from forms import ProductForm
 from flask_mysqldb import MySQL
 from flask_mysqldb import MySQL
 from MySQLdb.cursors import DictCursor
+from flask_wtf.file import  FileField, FileAllowed
+import os
+from werkzeug.utils import secure_filename
+from flask import current_app
+
+
+
 dashboard_bp = Blueprint('dashboard', __name__, url_prefix='/dashboard')
 
 
@@ -27,16 +34,36 @@ def add_product():
         description = form.description.data
         price = form.price.data
 
+        image_file = form.image.data
+        if image_file:
+            filename = secure_filename(image_file.filename)
+            relative_path = os.path.join('static', filename)  # Relative path
+            file_path = os.path.join(current_app.root_path, relative_path)
+            try:
+                image_file.save(file_path)
+            except Exception as e:
+                # Handle exceptions, e.g., file save error
+                flash(f'Error saving file: {e}', 'error')
+                return render_template('add_product.html', form=form)
+
         # Insert the product into the database
         cursor = mysql.connection.cursor()
-        cursor.execute("INSERT INTO products (name, description, price) VALUES (%s, %s, %s)", (name, description, price))
-        mysql.connection.commit()
-        cursor.close()
+        try:
+            cursor.execute("INSERT INTO products (name, description, price, image_path) VALUES (%s, %s, %s, %s)", 
+                           (name, description, price, filename))  # Use 'filename', not 'file_path'
+            mysql.connection.commit()
+        except Exception as e:
+            # Handle exceptions, e.g., database insertion error
+            flash(f'Error adding product to database: {e}', 'error')
+            return render_template('add_product.html', form=form)
+        finally:
+            cursor.close()
 
         flash('Product added successfully!', 'success')
         return render_template('add_product.html', form=form, success_message='Product added successfully!')
 
     return render_template('add_product.html', form=form)
+
 
 @dashboard_bp.route('/view_products')
 def view_products():
@@ -62,6 +89,12 @@ def edit_product(product_id):
         name = form.name.data
         description = form.description.data
         price = form.price.data
+
+        image_file=form.image.data
+        if image_file:
+            image_filename = secure_filename(image_file.filename)
+
+            image_file.save(os.path.join('/Users/macbook/Downloads'), image_filename)
 
         # Update the product in the database
         cursor = mysql.connection.cursor()

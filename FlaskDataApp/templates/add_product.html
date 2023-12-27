@@ -79,7 +79,7 @@
         <p id="alertMessage">{{ success_message }}</p>
     </div>
     
-    <form method="POST" action="{{ url_for('dashboard.add_product') }}">
+    <form method="POST" action="{{ url_for('dashboard.add_product') }}" enctype="multipart/form-data">
         <h2>Add Product</h2>
         {{ form.hidden_tag() }}
 
@@ -91,6 +91,9 @@
 
         <label for="price">Product Price:</label>
         {{ form.price() }}
+
+        <label for="image">Product Image:</label>
+        {{ form.image() }}
 
         <button type="submit">Add Product</button>
     </form>

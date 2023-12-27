@@ -86,13 +86,10 @@ def view_dashboard():
     cursor = mysql.connection.cursor()
     cursor.execute("SELECT * FROM products")
     products = cursor.fetchall()
-    print(products)  # This retrieves all products from the database
+    print(products)
+      # This retrieves all products from the database
     cursor.close()
     return render_template('user_dashboard.html', products=products)
-
-        
-    
-
 
 if __name__ == '__main__':
     app.run(debug=True)

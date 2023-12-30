@@ -96,8 +96,8 @@
         <input type="text" placeholder="Search...">
     </div>
     <div class="nav-links">
-        <a href="#">Login/Signup</a>
-        <a href="#">Cart</a>
+        <a href="{{ url_for('bp_user_login.user_login') }}">Login/Signup</a>
+        <a href="{{ url_for('view_cart_bp.view_cart') }}">View Cart</a>
     </div>
 </header>
 
@@ -106,14 +106,20 @@
         <div class="product">
             
             {% if product[4] %}
-                <img src="{{ url_for('static', filename=product[4]) }}" alt="Product Image">
+                <img src="{{ product[4] }}" alt="Product Image">
             {% else %}
                 <img src="{{ url_for('static', filename='placeholder.jpg') }}" alt="No image available" class="product-image">
             {% endif %}
-            <h3>Name: {{ product[0] }}</h3>
+            <h3>{{ product[0] }}</h3>
             <p>Description: {{ product[1] }}</p>
             <p>Price: ${{ product[2] }}</p>
-            <button>Add to Cart</button>
+            <form action="{{ url_for('add_to_cart') }}" method="post">
+                <input type="hidden" name="product_id" value="{{ product[3] }}">
+                <button type="submit">Add to Cart</button>
+            </form>
+            
+            
+            
         </div>
     {% else %}
         <p>No products found.</p>

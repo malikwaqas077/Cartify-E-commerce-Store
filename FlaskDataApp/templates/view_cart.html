@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your Cart</title>
+    <style>
+        /* Existing Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .cart-container {
+            width: 80%;
+            max-width: 600px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .cart-item {
+            border-bottom: 1px solid #eee;
+            padding: 10px 0;
+            display: flex;
+            align-items: center;
+        }
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+        .cart-item img {
+            width: 80px;
+            height: 80px;
+            border-radius: 4px;
+            margin-right: 15px;
+        }
+        .cart-item h3 {
+            font-size: 18px;
+            color: #333;
+            margin: 0 0 5px 0;
+        }
+        .cart-item p {
+            font-size: 16px;
+            color: #666;
+            margin: 0;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        .empty-cart {
+            text-align: center;
+            color: #666;
+        }
+
+        /* New Styles for Total Items and Total Price */
+        .totals {
+            text-align: right;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+        }
+        .totals p {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .total-price {
+            font-size: 20px;
+            font-weight: bold;
+            color: #4CAF50; /* Green color for total price */
+        }
+        .payment-button {
+            display: block;
+            padding: 10px;
+            margin-top: 20px;
+            background-color: #4CAF50; /* Green background */
+            color: white;
+            text-align: center;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .payment-button:hover {
+            background-color: #3e8e41; /* Darker green on hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="cart-container">
+        <h2>Your Cart</h2>
+        {% for item in cart_items %}
+            <div class="cart-item">
+                <img src="{{ url_for('static', filename=item[4]) }}" alt="{{ item[0] }}">
+                <div>
+                    <h3>{{ item[0] }}</h3>
+                    <p>Price: ${{ item[2] }}</p>
+                    <p>Quantity: {{ item[5] }}</p>
+                </div>
+            </div>
+        {% else %}
+            <p class="empty-cart">Your cart is empty.</p>
+        {% endfor %}
+        <div class="totals">
+            <p>Total Items: {{ total_items }}</p>
+            <p class="total-price">Total Price: ${{ total_amount }}</p>
+            
+        </div>
+        <a href="{{ url_for('payment_bp.payment') }}" class="payment-button">Proceed to Payment</a>
+
+
+
+    </div>
+</body>
+</html>

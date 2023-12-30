@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, flash
+from flask import Flask, render_template, redirect, url_for, flash, request
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, validators
 import mysql.connector
@@ -9,8 +9,10 @@ from flask import Flask
 from models import db
 from forms import ProductForm
 from dashboard import dashboard_bp
-    
-
+from view_cart import view_cart_bp    
+# from payment_proceed import payment_proceed_bp
+from payment import payment_bp  # Import the payment blueprint
+from user_login import bp_user_login  # Import the user_login blueprint
 
 
 app = Flask(__name__)
@@ -25,6 +27,10 @@ mysql = MySQL(app)
 
 
 app.register_blueprint(dashboard_bp)  # Register the blueprint
+app.register_blueprint(view_cart_bp)  # Register the blueprint
+# app.payment_proceed_bp(payment_proceed_bp)  # Register the blueprint
+app.register_blueprint(payment_bp)  # Register the blueprint
+app.register_blueprint(bp_user_login)  # Register the blueprint
 
 # User registration form
 class RegistrationForm(FlaskForm):
@@ -60,7 +66,6 @@ def signup():
         cursor.execute("INSERT INTO users (username, password) VALUES (%s, %s)", (form.username.data, form.password.data))
         mysql.connection.commit()
         cursor.close()
-        flash('Registration successful!', 'success')
         return redirect(url_for('login'))
     return render_template('signup.html', form=form)
 
@@ -84,13 +89,35 @@ def login():
 @app.route('/user_dashboard')
 def view_dashboard():
     cursor = mysql.connection.cursor()
-    cursor.execute("SELECT * FROM products")
+    cursor.execute("SELECT * FROM ecommerce_dataset")
     products = cursor.fetchall()
     print(products)
       # This retrieves all products from the database
     cursor.close()
     return render_template('user_dashboard.html', products=products)
 
+@app.route('/add_to_cart', methods=['POST'])
+
+def add_to_cart():
+    print("Add to Cart function called")
+    user_id = 1  # Temporary static value
+    product_id = request.form.get('product_id')
+    print("Product ID:", product_id)
+    quantity = 1  # Temporary static value
+    cursor = mysql.connection.cursor()
+    cursor.execute("INSERT INTO cart (user_id, product_id, quantity) VALUES (%s, %s, %s)", (user_id, product_id, quantity))
+    mysql.connection.commit()
+    cursor.close()
+
+    return redirect(url_for('view_dashboard'))
+
+# @app.route('/view_cart')
+# def view_cart():
+#     user_id = 1
+#     return render_template('view_cart.html', user_id=user_id)
+
 if __name__ == '__main__':
     app.run(debug=True)
+
+
 

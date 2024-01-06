@@ -1,4 +1,4 @@
-# Cartify: E-Commerce Cart Application
+# Cartify: E-Commerce Application
 
 Cartify is a web-based e-commerce cart application designed to streamline the online shopping experience. It offers intuitive features for product browsing, cart management, and seamless user interactions.
 

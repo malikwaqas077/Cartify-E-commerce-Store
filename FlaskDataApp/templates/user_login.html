@@ -61,17 +61,21 @@
     </style>
 </head>
 <body>
-    <form method="post" action="/user_login"> <!-- Update action attribute to your login handling route -->
+    <form method="post" action="{{ url_for('bp_user_login.user_login') }}"> <!-- Use url_for to generate the action URL -->
+        {{ form.hidden_tag() }} <!-- Include CSRF token -->
         <h1>Login</h1>
+
         <div class="mb-3">
-            <label for="username" class="form-label">Username:</label>
-            <input type="text" class="form-control" id="username" name="username" required>
+            {{ form.username.label(class="form-label") }}
+            {{ form.username(class="form-control") }}
         </div>
         <div class="mb-3">
-            <label for="password" class="form-label">Password:</label>
-            <input type="password" class="form-control" id="password" name="password" required>
+            {{ form.password.label(class="form-label") }}
+            {{ form.password(class="form-control") }}
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+
+        <button type="submit" class="btn btn-primary">{{ form.submit.label }}</button>
+
         <div class="mt-4 text-center">
             <p>Don't have an account? <a href="/signup">Sign up here</a></p>
         </div>

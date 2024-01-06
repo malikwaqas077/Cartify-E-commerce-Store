@@ -90,32 +90,103 @@
         .payment-button:hover {
             background-color: #3e8e41; /* Darker green on hover */
         }
+        /* Existing Styles */
+        /* Existing Styles */
+
+        /* New Styles for Buttons */
+        .quantity-button, .delete-button {
+            background-color: #4CAF50; /* Green background */
+            color: white;
+            text-align: center;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            text-decoration: none;
+            margin-right: 5px; /* Add space between buttons */
+            padding: 5px 10px; /* Adjust button padding */
+        }
+
+        .quantity-button:hover, .delete-button:hover {
+            background-color: #3e8e41; /* Darker green on hover */
+        }
+
+        /* Position buttons to the right of the cart item */
+        .buttons {
+            display: flex;
+            flex-direction: row; /* Align buttons horizontally */
+            align-items: center; /* Center items vertically */
+            margin-left: auto; /* Push buttons to the right */
+        }
+
+        /* Style the quantity span */
+        .quantity {
+            font-size: 18px;
+            margin: 0 5px; /* Add space between quantity and buttons */
+        }
+
+        /* Style the item information */
+        .item-info {
+            flex-grow: 1; /* Allow item info to grow to fill space */
+        }
+
+        /* Rest of your existing styles... */
+
     </style>
 </head>
+
 <body>
     <div class="cart-container">
         <h2>Your Cart</h2>
         {% for item in cart_items %}
-            <div class="cart-item">
-                <img src="{{ url_for('static', filename=item[4]) }}" alt="{{ item[0] }}">
-                <div>
+            <div class="cart-item" data-product-id="{{ item[4] }}">
+                <img src="{{ item[3] }}" alt="{{ item[0] }}">
+                <div class="item-info">
                     <h3>{{ item[0] }}</h3>
                     <p>Price: ${{ item[2] }}</p>
                     <p>Quantity: {{ item[5] }}</p>
+                </div>
+                <div class="buttons">
+                    <button class="quantity-button decrease-button" onclick="updateCart('{{ item[4] }}', 'decrease')">-</button>
+                    <span class="quantity">{{ item[5] }}</span>
+                    <button class="quantity-button increase-button" onclick="updateCart('{{ item[4] }}', 'increase')">+</button>
+                    <button class="delete-button" onclick="updateCart('{{ item[4] }}', 'delete')">Delete</button>
                 </div>
             </div>
         {% else %}
             <p class="empty-cart">Your cart is empty.</p>
         {% endfor %}
+
         <div class="totals">
             <p>Total Items: {{ total_items }}</p>
             <p class="total-price">Total Price: ${{ total_amount }}</p>
-            
         </div>
         <a href="{{ url_for('payment_bp.payment') }}" class="payment-button">Proceed to Payment</a>
-
-
-
     </div>
+
+    <script>
+        function updateCart(productId, action) {
+            fetch('/view_cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ product_id: productId, action: action }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    console.log(data.message);
+                    // Refresh the page to reflect the changes
+                    location.reload();
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
 </body>
 </html>

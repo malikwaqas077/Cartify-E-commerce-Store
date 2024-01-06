@@ -13,6 +13,7 @@ from view_cart import view_cart_bp
 # from payment_proceed import payment_proceed_bp
 from payment import payment_bp  # Import the payment blueprint
 from user_login import bp_user_login  # Import the user_login blueprint
+from flask import session
 
 
 app = Flask(__name__)
@@ -99,22 +100,39 @@ def view_dashboard():
 @app.route('/add_to_cart', methods=['POST'])
 
 def add_to_cart():
-    print("Add to Cart function called")
-    user_id = 1  # Temporary static value
-    product_id = request.form.get('product_id')
-    print("Product ID:", product_id)
-    quantity = 1  # Temporary static value
-    cursor = mysql.connection.cursor()
-    cursor.execute("INSERT INTO cart (user_id, product_id, quantity) VALUES (%s, %s, %s)", (user_id, product_id, quantity))
-    mysql.connection.commit()
-    cursor.close()
+    # Check if the user is logged in
+    if 'loggedin' in session and session['loggedin']:
+        # User is logged in, process the add to cart action
+        product_id = request.form['product_id']
+        print(f"this is product id {product_id}")
+        user_id = session['id']  # Assuming user_id is stored in session
+        print(f"this is user id {user_id}")
+        # Add the product to the cart in the database
+        cursor = mysql.connection.cursor()
+        cursor.execute("INSERT INTO cart (user_id, product_id, quantity) VALUES (%s, %s, 1)", (user_id, product_id))
+        mysql.connection.commit()
+        cursor.close()
 
-    return redirect(url_for('view_dashboard'))
+        flash('Item added to cart!', 'success')
+        return redirect(url_for('view_dashboard'))  # Redirect to a relevant page
+    else:
+        # User is not logged in, redirect to the login page
+        flash('Please log in to add items to your cart', 'error')
+        return redirect(url_for('bp_user_login.user_login'))
+
+    
 
 # @app.route('/view_cart')
 # def view_cart():
 #     user_id = 1
 #     return render_template('view_cart.html', user_id=user_id)
+
+@app.route('/logout')
+def logout():
+    session.pop('loggedin', None)
+    session.pop('id', None)
+    session.pop('username', None)
+    return redirect(url_for('view_dashboard'))
 
 if __name__ == '__main__':
     app.run(debug=True)

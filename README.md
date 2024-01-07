@@ -1,6 +1,6 @@
 # Cartify: E-Commerce Application
 
-Cartify is a web-based e-commerce cart application designed to streamline the online shopping experience. It offers intuitive features for product browsing, cart management, and seamless user interactions.
+Cartify is a web-based e-commerce application designed to streamline the online shopping experience. It offers intuitive features for product browsing, cart management, and seamless user interactions.
 
 ## Table of Contents
 - [Installation](#installation)
@@ -15,8 +15,10 @@ Cartify is a web-based e-commerce cart application designed to streamline the on
 To set up Cartify on your system, follow these steps:
 
 ### Prerequisites:
-- Python
+- Python - Flask
 - MySQL
+- JavaScript
+- Ajax
 
 ### Steps:
 ```bash

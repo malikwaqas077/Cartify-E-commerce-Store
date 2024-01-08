@@ -90,7 +90,7 @@ def login():
 @app.route('/user_dashboard')
 def view_dashboard():
     cursor = mysql.connection.cursor()
-    cursor.execute("SELECT * FROM ecommerce_dataset")
+    cursor.execute("SELECT * FROM products")
     products = cursor.fetchall()
     print(products)
       # This retrieves all products from the database
@@ -100,6 +100,7 @@ def view_dashboard():
 @app.route('/add_to_cart', methods=['POST'])
 
 def add_to_cart():
+    print("add to cart")
     # Check if the user is logged in
     if 'loggedin' in session and session['loggedin']:
         # User is logged in, process the add to cart action
@@ -113,14 +114,29 @@ def add_to_cart():
         mysql.connection.commit()
         cursor.close()
 
-        flash('Item added to cart!', 'success')
+        
         return redirect(url_for('view_dashboard'))  # Redirect to a relevant page
     else:
-        # User is not logged in, redirect to the login page
+        print("user not logged in")
+        #User is not logged in, redirect to the login page
         flash('Please log in to add items to your cart', 'error')
-        return redirect(url_for('bp_user_login.user_login'))
+        return redirect(url_for('bp_user_login.user_login'))  # Redirect to the login page
 
-    
+
+@app.route('/check_cart')
+def check_cart():
+    user_id = session.get('id')
+    if user_id:
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT COUNT(*) FROM cart WHERE user_id = %s", (user_id,))
+        cart_count = cursor.fetchone()[0]
+        print(f"This is a cart_count{cart_count}")
+        cursor.close()
+        return {'cart_empty': cart_count == 0}
+    else:
+        # Handle the case where the user is not logged in
+        return {'cart_empty': True}
+
 
 # @app.route('/view_cart')
 # def view_cart():

@@ -38,22 +38,24 @@ def update_cart():
 
 def view_cart():
     if 'loggedin' in session and session['loggedin']:
-        user_id = 1  # Assuming user_id is stored in session
+        user_id = session['id']  # Assuming user_id is stored in session
         cursor = mysql.connection.cursor()
         query = """
         SELECT p.*, c.quantity 
-        FROM ecommerce_dataset p 
+        FROM products p 
         JOIN cart c ON p.id = c.product_id 
         WHERE c.user_id = %s
         """ 
         cursor.execute(query, (user_id,))
         cart_items = cursor.fetchall()
+        print(f"cart_items:{cart_items}")
 
         total_items = 0
         total_amount = 0.0
         cart_items_info = []
 
         for item in cart_items:
+            print(item)
             price_without_comma = float(item[2].replace(',', ''))
             quantity = int(item[5])
             subtotal = price_without_comma * quantity

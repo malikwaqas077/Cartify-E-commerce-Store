@@ -87,6 +87,43 @@
             }
         }
     </style>
+    <script>
+        function showAlert(message) {
+            alert(message);
+        }
+        function checkCartandRedirect(cart_count) {
+            if (cart_count == 0) {
+                showAlert('Your cart is empty. Please add items to your cart before checking out.');
+            } else {
+                print("This is running");
+                window.location.href = "{{ url_for('view_cart_bp.view_cart_main') }}";
+            }
+        }
+
+        function checkCart(){
+            fetch("{{ url_for('check_cart') }}")
+            .then(response => {
+                console.log("Response received"); // Check if the response is received
+                return response.json();
+            })
+            .then(data => {
+                console.log("Data received", data); // Log the received data
+                if (data.cart_empty){
+                    console.log("Cart is empty"); // Check if this condition is met
+                    alert("Your cart is empty. Please add items to your cart before checking out.");
+                }
+                else{
+                    console.log("Cart has items, redirecting"); // Check if this condition is met
+                    window.location.href = "{{ url_for('view_cart_bp.view_cart_main') }}";
+                }
+            }).catch(error => {
+                console.error("Error:", error); // Log any errors
+            });
+        }
+
+
+
+    </script>
 </head>
 
 <body>
@@ -103,7 +140,7 @@
         {% else %}
             <a href="{{ url_for('bp_user_login.user_login') }}">Login/Signup</a>
         {% endif %}
-        <a href="{{ url_for('view_cart_bp.view_cart_main') }}">View Cart</a>
+        <a href="javascript:void(0)" onclick="checkCart()">View Cart</a>
     </div>
 </header>
 
@@ -121,11 +158,12 @@
             <p>Price: ${{ product[2] }}</p>
             <form action="{{ url_for('add_to_cart') }}" method="post">
                 <input type="hidden" name="product_id" value="{{ product[4] }}">
-                <button type="submit">Add to Cart</button>
+                {% if not session['username'] %}
+                    <button type="button" onclick="showAlert('Please log in to add items to your cart')">Add to Cart</button>
+                {% else %}
+                    <button type="submit">Add to Cart</button>
+                {% endif %}
             </form>
-            
-            
-            
         </div>
     {% else %}
         <p>No products found.</p>

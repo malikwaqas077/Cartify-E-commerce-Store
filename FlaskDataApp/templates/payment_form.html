@@ -109,6 +109,19 @@
     </script>
 </head>
 <body>
+    <!-- payment_form.html -->
+
+    {% with messages = get_flashed_messages(category_filter=["success"]) %}
+    {% if messages %}
+    <script>
+        alert("{{ messages[0] }}");
+        window.location.href = "{{ url_for('view_dashboard') }}"; // Replace 'dashboard' with the endpoint of your main dashboard
+    </script>
+    {% endif %}
+    {% endwith %}
+
+    <!-- Rest of your HTML content -->
+
     <div class="payment-form">
         <h2>Payment Details</h2>
         <form action="/charge" method="post" id="payment-form" novalidate>

@@ -1,1 +1,6 @@
+Flask==2.2.2
+Flask-WTF==1.0.1
+WTForms==3.0.1
+mysql-connector-python==8.0.30
+Flask-MySQLdb==1.0.1
 

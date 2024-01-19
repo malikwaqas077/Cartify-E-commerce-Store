@@ -9,21 +9,23 @@ from flask import Flask
 from models import db
 from forms import ProductForm
 from dashboard import dashboard_bp
-from view_cart import view_cart_bp    
+from view_cart import view_cart_bp
 # from payment_proceed import payment_proceed_bp
 from payment import payment_bp  # Import the payment blueprint
 from user_login import bp_user_login  # Import the user_login blueprint
 from flask import session
+import csv  # Import the csv module
+
 
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
 
 # MySQL Configuration
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_HOST'] = 'malikwaqas077.mysql.pythonanywhere-services.com'
+app.config['MYSQL_USER'] = 'malikwaqas077'
 app.config['MYSQL_PASSWORD'] = 'Malik786'
-app.config['MYSQL_DB'] = 'crud_app_db'
+app.config['MYSQL_DB'] = 'malikwaqas077$crud_app_db'
 mysql = MySQL(app)
 
 
@@ -54,10 +56,44 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', [validators.DataRequired()])
     submit = SubmitField('Sign In')
 
+def import_csv_data():
+    cursor = mysql.connection.cursor()
+    csv_file_path = '/home/malikwaqas077/mysite/output.csv'
+
+    try:
+        with open(csv_file_path, 'r') as file:
+            csv_data = csv.reader(file)
+            next(csv_data)  # Skip header
+            for row in csv_data:
+                try:
+                    cursor.execute("INSERT INTO products (name, description, price, image_path, id, category) VALUES (%s, %s, %s, %s, %s, %s)", row)
+                except Exception as e:
+                    if 'Duplicate entry' in str(e):
+                        print(f"Skipping duplicate entry for id: {row[4]}")
+                    else:
+                        raise  # Re-raise other exceptions
+            mysql.connection.commit()
+            print("Data added successfully")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+    cursor.close()
+
+
+
 # Routes
 @app.route('/')
 def home():
-    return render_template('home.html')
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT DISTINCT category FROM products")
+    products = cursor.fetchall()
+
+      # This retrieves all products from the database
+    cursor.close()
+    #import_csv_data()
+
+
+    return render_template('index.html', products=products)
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -92,9 +128,10 @@ def view_dashboard():
     cursor = mysql.connection.cursor()
     cursor.execute("SELECT * FROM products")
     products = cursor.fetchall()
-    print(products)
+
       # This retrieves all products from the database
     cursor.close()
+    #import_csv_data()
     return render_template('user_dashboard.html', products=products)
 
 @app.route('/add_to_cart', methods=['POST'])
@@ -114,7 +151,7 @@ def add_to_cart():
         mysql.connection.commit()
         cursor.close()
 
-        
+
         return redirect(url_for('view_dashboard'))  # Redirect to a relevant page
     else:
         print("user not logged in")
@@ -152,6 +189,8 @@ def logout():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
 
 
 

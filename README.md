@@ -1,4 +1,4 @@
-# FlaskDataApp
+# Cartify An E-commerce Store
 
 ## Introduction
 

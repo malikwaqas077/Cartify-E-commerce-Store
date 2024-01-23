@@ -58,7 +58,7 @@ class LoginForm(FlaskForm):
 
 def import_csv_data():
     cursor = mysql.connection.cursor()
-    csv_file_path = '/home/malikwaqas077/mysite/output.csv'
+    csv_file_path = '/home/malikwaqas077/mysite/modified_dataframe.csv'
 
     try:
         with open(csv_file_path, 'r') as file:
@@ -90,8 +90,8 @@ def home():
 
       # This retrieves all products from the database
     cursor.close()
-    #import_csv_data()
-
+    # import_csv_data()
+    print(products)
 
     return render_template('index.html', products=products)
 
@@ -116,48 +116,54 @@ def login():
         cursor.close()
         if user:
             flash('Login successful!', 'success')
-            return redirect(url_for('dashboard.dashboard'))  # Redirect to the dashboard
+            return redirect(url_for('user_dashboard'))  # Redirect to the dashboard
 
         else:
             flash('Login failed. Check your username and password.', 'danger')
             flash('Or register if you have not done so already.', 'danger')
     return render_template('login.html', form=form)
 
-@app.route('/user_dashboard')
-def view_dashboard():
+@app.route('/user_dashboard/', defaults={'category_name': 'Shoes'})
+@app.route('/user_dashboard/<category_name>')
+def user_dashboard(category_name):
     cursor = mysql.connection.cursor()
-    cursor.execute("SELECT * FROM products")
-    products = cursor.fetchall()
 
-      # This retrieves all products from the database
+    if category_name:
+        print("Category selected: ", category_name)
+        cursor.execute("SELECT * FROM products WHERE category = %s", (category_name,))
+    else:
+        print("No specific category selected, showing all products")
+        cursor.execute("SELECT * FROM products")  # Select all products
+
+    products = cursor.fetchall()
     cursor.close()
-    #import_csv_data()
     return render_template('user_dashboard.html', products=products)
 
-@app.route('/add_to_cart', methods=['POST'])
-
+@app.route('/add_to_cart', methods=['GET', 'POST'])
 def add_to_cart():
-    print("add to cart")
-    # Check if the user is logged in
-    if 'loggedin' in session and session['loggedin']:
-        # User is logged in, process the add to cart action
-        product_id = request.form['product_id']
-        print(f"this is product id {product_id}")
-        user_id = session['id']  # Assuming user_id is stored in session
-        print(f"this is user id {user_id}")
-        # Add the product to the cart in the database
-        cursor = mysql.connection.cursor()
-        cursor.execute("INSERT INTO cart (user_id, product_id, quantity) VALUES (%s, %s, 1)", (user_id, product_id))
-        mysql.connection.commit()
-        cursor.close()
+    if request.method == 'POST':
+        # Handle the POST request
+        print("add to cart")
+        # Check if the user is logged in
+        if 'loggedin' in session and session['loggedin']:
+            # User is logged in, process the add to cart action
+            product_id = request.form['product_id']
+            print(f"this is product id {product_id}")
+            user_id = session['id']  # Assuming user_id is stored in session
+            print(f"this is user id {user_id}")
+            # Add the product to the cart in the database
+            cursor = mysql.connection.cursor()
+            cursor.execute("INSERT INTO cart (user_id, product_id, quantity) VALUES (%s, %s, 1)", (user_id, product_id))
+            mysql.connection.commit()
+            cursor.close()
 
 
-        return redirect(url_for('view_dashboard'))  # Redirect to a relevant page
-    else:
-        print("user not logged in")
-        #User is not logged in, redirect to the login page
-        flash('Please log in to add items to your cart', 'error')
-        return redirect(url_for('bp_user_login.user_login'))  # Redirect to the login page
+            return redirect(url_for('user_dashboard'))  # Redirect to a relevant page
+        else:
+            print("user not logged in")
+            #User is not logged in, redirect to the login page
+            flash('Please log in to add items to your cart', 'error')
+            return redirect(url_for('bp_user_login.user_login'))  # Redirect to the login page
 
 
 @app.route('/check_cart')
@@ -185,11 +191,10 @@ def logout():
     session.pop('loggedin', None)
     session.pop('id', None)
     session.pop('username', None)
-    return redirect(url_for('view_dashboard'))
+    return redirect(url_for('user_dashboard'))
 
 if __name__ == '__main__':
     app.run(debug=True)
-
 
 
 

@@ -2,8 +2,7 @@
 
 ## Introduction
 
-FlaskDataApp is a Flask-based web application designed to manage an e-commerce platform. The application features user registration, product management, cart functionalities, and payment processing.
-
+Cartify is a comprehensive e-commerce platform web application developed using Python with the Flask framework. It incorporates Tailwind CSS for responsive and modern frontend design, along with JavaScript for dynamic user interactions. This application offers a complete end-to-end solution for both backend and frontend aspects of an e-commerce platform, featuring functionalities such as user registration, product management, cart features, and payment processing. The integration of these technologies ensures a seamless and efficient online shopping experience.
 ## Features
 
 - **User Management:** Includes user registration and login functionalities.

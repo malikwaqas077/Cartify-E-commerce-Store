@@ -41,11 +41,11 @@ def view_cart():
         user_id = session['id']  # Assuming user_id is stored in session
         cursor = mysql.connection.cursor()
         query = """
-        SELECT p.*, c.quantity 
-        FROM products p 
-        JOIN cart c ON p.id = c.product_id 
+        SELECT p.name, p.description, p.price, p.image_path, p.id, c.quantity
+        FROM products p
+        JOIN cart c ON p.id = c.product_id
         WHERE c.user_id = %s
-        """ 
+        """
         cursor.execute(query, (user_id,))
         cart_items = cursor.fetchall()
         print(f"cart_items:{cart_items}")
@@ -70,5 +70,6 @@ def view_cart():
     else:
         flash('Please log in to view your cart', 'danger')
         return redirect(url_for('bp_user_login.user_login'))
+
 
 # Make sure to register the Blueprint in your main app.

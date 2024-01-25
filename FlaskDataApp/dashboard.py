@@ -22,13 +22,16 @@ def dashboard():
     products = cursor.fetchall()
     cursor.close()
 
-    return render_template('dashboard.html', products=products)
+    form = ProductForm()  # Create an instance of ProductForm
+    
+    return render_template('dashboard.html', products=products, form=form)
 
 @dashboard_bp.route('/add_product', methods=['GET', 'POST'])
 def add_product():
     mysql = MySQL()
     form = ProductForm()
     if form.validate_on_submit():
+        print('Form validated')
         # Get data from the form
         name = form.name.data
         description = form.description.data
@@ -43,8 +46,9 @@ def add_product():
                 image_file.save(file_path)
             except Exception as e:
                 # Handle exceptions, e.g., file save error
-                flash(f'Error saving file: {e}', 'error')
-                return render_template('add_product.html', form=form)
+                flash(f'Error saving file: {e}', 'success-error')
+                print(f'Error saving file: {e}')
+                return render_template('dashboard.html', form=form)
 
         # Insert the product into the database
         cursor = mysql.connection.cursor()
@@ -55,15 +59,18 @@ def add_product():
         except Exception as e:
             # Handle exceptions, e.g., database insertion error
             flash(f'Error adding product to database: {e}', 'error')
-            return render_template('add_product.html', form=form)
+            print(f'Error adding product to database: {e}')
+            return render_template('dashboard.html', form=form)
         finally:
             cursor.close()
 
         flash('Product added successfully!', 'success')
-        return render_template('add_product.html', form=form, success_message='Product added successfully!')
-
-    return render_template('add_product.html', form=form)
-
+        print('Product added successfully!')
+        return redirect(url_for('dashboard.dashboard'))
+    else:
+        print('Form not validated')
+        print(form.errors)
+    return render_template('dashboard.html', form=form)
 
 @dashboard_bp.route('/view_products')
 def view_products():
@@ -116,4 +123,4 @@ def delete_product(product_id):
     cursor.close()
 
     flash('Product deleted successfully!', 'success')
-    return redirect(url_for('dashboard.view_products'))
+    return redirect(url_for('dashboard.dashboard'))

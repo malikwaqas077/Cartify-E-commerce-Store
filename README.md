@@ -1,5 +1,7 @@
 # Cartify An E-commerce Store
 
+<img width="1440" alt="Screenshot 2024-02-01 at 23 07 47" src="https://github.com/malikwaqas077/Cartify-E-commerce-Store/assets/31136022/2f7b9f0d-bd76-4cd0-88b7-1cc17c3b36b0">
+
 ## Introduction
 
 Cartify is a comprehensive e-commerce platform web application developed using Python with the Flask framework. It incorporates Tailwind CSS for responsive and modern frontend design, along with JavaScript for dynamic user interactions. This application offers a complete end-to-end solution for both backend and frontend aspects of an e-commerce platform, featuring functionalities such as user registration, product management, cart features, and payment processing. The integration of these technologies ensures a seamless and efficient online shopping experience.
